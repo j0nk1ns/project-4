@@ -4,23 +4,25 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-    public Transform explosionPrefab;
+
+    Rigidbody rb;
+    public float Thrust = 200f;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
 
     void OnCollisionEnter(Collision collision)
     {
         ContactPoint contact = collision.contacts[0];
-        Quaternion rotation = Quaternion.FromToRotation(Vector3.up, contact.normal);
-        Vector3 position = contact.point;
-        Instantiate(explosionPrefab, position, rotation);
-        FixedUpdate();
+        if(collision.gameObject.CompareTag("ground"))
+        {
+            Debug.Log("here");
+            rb.AddForce(Vector3.up * Thrust);
+        }
     }
 
-    void FixedUpdate()
-    {
-        Vector3 fwd = transform.TransformDirection(Vector3.forward);
 
-        if (Physics.Raycast(transform.position, fwd, 10))
-            print("There is something in front of the object!");
-    }
 }
 
